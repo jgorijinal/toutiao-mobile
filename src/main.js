@@ -7,6 +7,8 @@ import './styles/index.less'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 
+import 'amfe-flexible'
+
 // iconPark 图标库
 import { install } from '@icon-park/vue/es/all'
 install(Vue)
