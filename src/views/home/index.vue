@@ -8,13 +8,9 @@
     </van-nav-bar>
     <!--标签页-->
     <van-tabs v-model="active" animated swipeable class="channel-tabs">
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
+      <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
+        <article-list :channel="channel"></article-list>
+      </van-tab>
       <template #nav-right>
         <van-icon name="wap-nav" class="hamburg"/>
         <div class="placeholder"></div>
@@ -24,10 +20,27 @@
 </template>
 
 <script>
+import { getUserChannels } from '@/api/user'
+import ArticleList from './components/article-list.vue'
+
 export default {
+  components: {
+    ArticleList
+  },
   data () {
     return {
-      active: 0
+      active: 0,
+      channels: [] // 频道列表
+    }
+  },
+  created () {
+    this.getUserChannels() // 获取频道列表
+  },
+  methods: {
+    async getUserChannels () {
+      const { data } = await getUserChannels()
+      console.log(data)
+      this.channels = data.channels
     }
   }
 }
@@ -87,5 +100,7 @@ export default {
       flex-shrink: 0;
     }
   }
-
+  /deep/.van-tabs__content{
+    padding-bottom:100px;
+  }
 </style>
