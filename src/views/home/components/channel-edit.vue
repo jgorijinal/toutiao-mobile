@@ -8,7 +8,7 @@
       <van-button class="edit-btn" size="mini" type="danger" plain round>编辑</van-button>
     </van-cell>
     <van-grid gutter="10" class="my-grid">
-      <van-grid-item class="grid-item" v-for="value in 8" :key="value" text="文字" icon="close"/>
+      <van-grid-item class="grid-item" v-for="channel in myChannels" :key="channel.id" :text="channel.name" icon="close"/>
     </van-grid>
     <!--推荐频道部分-->
     <van-cell :border="false">
@@ -24,7 +24,12 @@
 
 <script>
 export default {
-
+  props: {
+    myChannels: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 
@@ -49,6 +54,7 @@ export default {
       border-radius: 6px;
       .van-grid-item__text{
         font-size:28px;
+        margin-top:0;
       }
     }
   }
