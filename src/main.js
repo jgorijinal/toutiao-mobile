@@ -10,6 +10,7 @@ import 'amfe-flexible'
 
 import './styles/index.less'
 
+import './utils/dayjs'
 // iconPark 图标库
 // import { install } from '@icon-park/vue/es/all'
 // install(Vue)
