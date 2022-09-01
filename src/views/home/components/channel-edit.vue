@@ -8,7 +8,7 @@
       <van-button class="edit-btn" size="mini" type="danger" plain round>编辑</van-button>
     </van-cell>
     <van-grid gutter="10" class="my-grid">
-      <van-grid-item class="grid-item" v-for="channel in myChannels" :key="channel.id" :text="channel.name" icon="close"/>
+      <van-grid-item class="grid-item" :class="{ active:activeIndex === channel.id}" v-for="channel in myChannels" :key="channel.id" :text="channel.name" icon="close"/>
     </van-grid>
     <!--推荐频道部分-->
     <van-cell :border="false">
@@ -17,17 +17,61 @@
       </template>
     </van-cell>
     <van-grid gutter="10" class="recommend-grid">
-      <van-grid-item icon="plus" class="grid-item" v-for="value in 8" :key="value" text="文字" />
+      <van-grid-item icon="plus" class="grid-item" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
     </van-grid>
   </div>
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel'
 export default {
   props: {
     myChannels: {
       type: Array,
       required: true
+    },
+    activeIndex: {
+      type: Number,
+      required: true
+    }
+  },
+  data () {
+    return {
+      allChannels: [] // 所有频道
+
+    }
+  },
+  computed: {
+    recommendChannels () { // 推荐频道
+      const result = this.allChannels.filter(channel => {
+        // const res = this.myChannels.find(myChannel => {
+        //   return myChannel.id === channel.id
+        // })
+        // return !res
+        return !(this.myChannels.find(myChannel => myChannel.id === channel.id))
+      })
+      return result
+      // const recommendChannels = []
+      // this.allChannels.forEach(channel => {
+      //   // 遍历全部列表, 找到满足调价的元素
+      //   const result = this.myChannels.find(myChannel => {
+      //     return myChannel.id === channel.id
+      //   })
+      //   // 如果不存在, 就 push
+      //   if (!result) {
+      //     recommendChannels.push(channel)
+      //   }
+      // })
+      // return recommendChannels
+    }
+  },
+  created () {
+    this.getAllChannels()
+  },
+  methods: {
+    async getAllChannels () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.channels
     }
   }
 }
@@ -55,6 +99,11 @@ export default {
       .van-grid-item__text{
         font-size:28px;
         margin-top:0;
+      }
+    }
+    &.active {
+      .van-grid-item__text{
+        color:red;
       }
     }
   }
