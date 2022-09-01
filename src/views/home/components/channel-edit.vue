@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, addUserChannel } from '@/api/channel'
+import storage from '@/utils/storage'
 export default {
   props: {
     myChannels: {
@@ -80,24 +81,41 @@ export default {
       const { data } = await getAllChannels()
       this.allChannels = data.channels
     },
-    addChannel (channel) {
+    async addChannel (channel) { // 新增频道
       // this.myChannels.push(channel)
       this.$emit('update:myChannels', [...this.myChannels, channel])
+
+      // 数据持久化
+      if (this.$store.state.user.user) {
+        // 登录状态
+        try {
+          await addUserChannel([{ // 数组 [{id: , seq : 序号 }]
+            id: channel.id,
+            seq: this.myChannels.length
+          }])
+        } catch (err) {
+          this.$toast('保存失败, 请稍后重试')
+        }
+      } else {
+        // 未登录状态
+        // 需要存储在本地存储
+        storage.setItem('TOUTIAO_CHANNELS', this.myChannels)
+      }
     },
     clickMyChannel (channel, index) { // 点击我的频道 , 注意第二个参数要接受索引值
       if (this.isEdit) {
         // 编辑状态
 
-        // 先处理一个情况: 不能删除 "推荐"频道, 固定的频道
+        // 3. 处理一个情况: 不能删除 "推荐"频道, 固定的频道
         if (this.fixeChannels.includes(channel.id)) { // 注意:这里需要检查的是id不是索引值, 因为 fixeChannels 它存的是 id
           this.$toast('不能删除此频道哦')
         } else {
-          // myChannels 删除点击的元素 ( 主要的逻辑 )
+          // 1. myChannels 删除点击的元素 ( 主要的逻辑 )
           const clonedChannel = [...this.myChannels]
           clonedChannel.splice(index, 1)
           this.$emit('update:myChannels', clonedChannel)
 
-          // 处理一个 bug
+          // 2. 处理一个 bug
           // 如果要删除的频道是激活频道之前的频道, 则更新激活的频道项
           if (index <= this.activeIndex) {
             // 让激活的频道 - 1
