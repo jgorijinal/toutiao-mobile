@@ -12,10 +12,12 @@
         <article-list :channel="channel"></article-list>
       </van-tab>
       <template #nav-right>
-        <van-icon name="wap-nav" class="hamburg"/>
+        <van-icon name="wap-nav" class="hamburg" @click="isEditChannelShow = true"/>
         <div class="placeholder"></div>
       </template>
     </van-tabs>
+    <!--频道编辑 弹出层-->
+    <van-popup v-model="isEditChannelShow"  closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" />
   </div>
 </template>
 
@@ -30,7 +32,8 @@ export default {
   data () {
     return {
       active: 0,
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      isEditChannelShow: false // 频道编辑 弹层 显示/隐藏
     }
   },
   created () {
