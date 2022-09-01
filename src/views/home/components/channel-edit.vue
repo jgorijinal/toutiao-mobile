@@ -5,10 +5,12 @@
       <template #title>
         <span class="title-text">我的频道</span>
       </template>
-      <van-button class="edit-btn" size="mini" type="danger" plain round>编辑</van-button>
+      <van-button class="edit-btn" size="mini" type="danger" plain round @click="isEdit = !isEdit">{{isEdit ? '完成' : '编辑' }}</van-button>
     </van-cell>
     <van-grid gutter="10" class="my-grid">
-      <van-grid-item class="grid-item" :class="{ active:activeIndex === channel.id}" v-for="channel in myChannels" :key="channel.id" :text="channel.name" icon="close"/>
+      <van-grid-item  class="grid-item" :class="{ active:activeIndex === channel.id, isEdit :isEdit && !fixeChannels.includes(channel.id)}"
+      v-for="channel in myChannels" :key="channel.id" :text="channel.name"
+      :icon="isEdit && !fixeChannels.includes(channel.id) ? 'close' : ''"/>
     </van-grid>
     <!--推荐频道部分-->
     <van-cell :border="false">
@@ -17,7 +19,7 @@
       </template>
     </van-cell>
     <van-grid gutter="10" class="recommend-grid">
-      <van-grid-item icon="plus" class="grid-item" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
+      <van-grid-item @click="addChannel(channel)" icon="plus" class="grid-item" v-for="channel in recommendChannels" :key="channel.id" :text="channel.name" />
     </van-grid>
   </div>
 </template>
@@ -37,8 +39,9 @@ export default {
   },
   data () {
     return {
-      allChannels: [] // 所有频道
-
+      allChannels: [], // 所有频道
+      isEdit: false, // 是否编辑状态(点击了右上角的编辑按钮)
+      fixeChannels: [0] // 不允许删除的频道(固定频道), 比如 "推荐"频道的id : 0
     }
   },
   computed: {
@@ -72,6 +75,10 @@ export default {
     async getAllChannels () {
       const { data } = await getAllChannels()
       this.allChannels = data.channels
+    },
+    addChannel (channel) {
+      // this.myChannels.push(channel)
+      this.$emit('update:myChannels', [...this.myChannels, channel])
     }
   }
 }
@@ -116,6 +123,9 @@ export default {
         z-index:2;
         font-size:34px;
       }
+      &.isEdit {
+        animation: bounce 0.15s infinite alternate linear
+      }
     }
   }
   /deep/.recommend-grid {
@@ -132,5 +142,9 @@ export default {
       }
     }
   }
+}
+@keyframes bounce {
+  from {transform:rotate(-1deg)}
+  to {transform:rotate(1deg)}
 }
 </style>
