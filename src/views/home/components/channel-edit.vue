@@ -5,12 +5,16 @@
       <template #title>
         <span class="title-text">我的频道</span>
       </template>
-      <van-button class="edit-btn" size="mini" type="danger" plain round @click="isEdit = !isEdit">{{isEdit ? '完成' : '编辑' }}</van-button>
+      <van-button class="edit-btn" size="mini" type="danger" plain round
+      @click="isEdit = !isEdit">{{isEdit ? '完成' : '编辑' }}</van-button>
     </van-cell>
     <van-grid gutter="10" class="my-grid">
-      <van-grid-item  class="grid-item" :class="{ active:activeIndex === channel.id, isEdit :isEdit && !fixeChannels.includes(channel.id)}"
-      v-for="channel in myChannels" :key="channel.id" :text="channel.name"
-      :icon="isEdit && !fixeChannels.includes(channel.id) ? 'close' : ''"/>
+      <van-grid-item  class="grid-item"
+      :class="{ active:activeIndex ===  index, isEdit :isEdit && !fixeChannels.includes(channel.id)}"
+      v-for="(channel,index) in myChannels" :key="channel.id" :text="channel.name"
+      :icon="isEdit && !fixeChannels.includes(channel.id) ? 'close' : ''"
+      @click="clickMyChannel(channel, index)"
+      />
     </van-grid>
     <!--推荐频道部分-->
     <van-cell :border="false">
@@ -79,6 +83,34 @@ export default {
     addChannel (channel) {
       // this.myChannels.push(channel)
       this.$emit('update:myChannels', [...this.myChannels, channel])
+    },
+    clickMyChannel (channel, index) { // 点击我的频道 , 注意第二个参数要接受索引值
+      if (this.isEdit) {
+        // 编辑状态
+
+        // 先处理一个情况: 不能删除 "推荐"频道, 固定的频道
+        if (this.fixeChannels.includes(channel.id)) { // 注意:这里需要检查的是id不是索引值, 因为 fixeChannels 它存的是 id
+          this.$toast('不能删除此频道哦')
+        } else {
+          // myChannels 删除点击的元素 ( 主要的逻辑 )
+          const clonedChannel = [...this.myChannels]
+          clonedChannel.splice(index, 1)
+          this.$emit('update:myChannels', clonedChannel)
+
+          // 处理一个 bug
+          // 如果要删除的频道是激活频道之前的频道, 则更新激活的频道项
+          if (index <= this.activeIndex) {
+            // 让激活的频道 - 1
+            this.$emit('update-active', this.activeIndex - 1, true) // 第三个参数 不关掉弹层
+          }
+        }
+      } else {
+        // 不是编辑状态
+
+        // 通知父组件改变 它的 active
+        this.$emit('update-active', index, false) // 这里要传索引值, 不能用 id
+        // 在父组件那里关闭弹层
+      }
     }
   }
 }

@@ -19,7 +19,11 @@
     <!--频道编辑 弹出层-->
     <van-popup v-model="isEditChannelShow"  closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" >
       <!--编辑频道组件-->
-      <channel-edit :my-channels.sync="channels" :active-index="active"></channel-edit>
+      <channel-edit
+      :my-channels.sync="channels"
+      :active-index="active"
+      @update-active="updateActive"
+      ></channel-edit>
     </van-popup>
 </div>
 </template>
@@ -49,6 +53,12 @@ export default {
       const { data } = await getUserChannels()
       console.log(data)
       this.channels = data.channels
+    },
+    updateActive (index, isEditChannelShow = false) { // 子组件的事件
+      // 更新当前标签
+      this.active = index
+      // 关闭弹层
+      this.isEditChannelShow = isEditChannelShow
     }
   }
 }
