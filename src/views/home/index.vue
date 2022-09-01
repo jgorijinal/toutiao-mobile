@@ -17,17 +17,22 @@
       </template>
     </van-tabs>
     <!--频道编辑 弹出层-->
-    <van-popup v-model="isEditChannelShow"  closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" />
-  </div>
+    <van-popup v-model="isEditChannelShow"  closeable close-icon-position="top-left" position="bottom" :style="{ height: '80%' }" >
+      <!--编辑频道组件-->
+      <channel-edit></channel-edit>
+    </van-popup>
+</div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data () {
     return {
