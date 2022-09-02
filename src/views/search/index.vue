@@ -27,6 +27,7 @@
 import SearchHistory from './components/search-history.vue'
 import SearchSuggestion from './components/search-suggestion.vue'
 import SearchResult from './components/search-result.vue'
+import storage from '@/utils/storage'
 export default {
   components: {
     SearchHistory,
@@ -37,7 +38,7 @@ export default {
     return {
       value: '',
       isResultShow: false, // 控制搜索结果显示/隐藏\
-      searchHistory: [] // 历史记录
+      searchHistory: storage.getItem('search-histories') || [] // 历史记录
     }
   },
   methods: {
@@ -55,6 +56,11 @@ export default {
     },
     onCancel () { // 取消
       console.log('取消')
+    }
+  },
+  watch: {
+    searchHistory () {
+      storage.setItem('search-histories', this.searchHistory)
     }
   }
 }
