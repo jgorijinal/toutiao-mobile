@@ -18,7 +18,7 @@
     <!--搜索建议-->
     <search-suggestion v-else-if="value" :value="value" @search="onSearch"></search-suggestion>
     <!--搜索历史-->
-    <search-history v-else></search-history>
+    <search-history v-else :searchHistory.sync="searchHistory" @search="onSearch"></search-history>
 </form>
   </div>
 </template>

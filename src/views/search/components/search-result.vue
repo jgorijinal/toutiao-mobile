@@ -44,7 +44,7 @@ export default {
         // 2. 数据追加到 list数组
         const { results } = data
         this.list.push(...results)
-        console.log(results)
+
         // 3. 请求完了关闭 loading
         this.loading = false
         // 4.  判断是否还有数据
