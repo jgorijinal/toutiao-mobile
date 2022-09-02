@@ -32,6 +32,7 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
+import storage from '@/utils/storage'
 
 export default {
   components: {
@@ -50,9 +51,30 @@ export default {
   },
   methods: {
     async getUserChannels () {
-      const { data } = await getUserChannels()
-      console.log(data)
-      this.channels = data.channels
+      // 已登录 (调接口)
+      // 未登录
+      // · 有存储, 就用
+      // · 没存储 , 就用默认的频道(调同一个接口)
+      try {
+        if (this.$store.state.user.user) {
+          // 已登录
+          const { data } = await getUserChannels()
+          this.channels = data.channels
+        } else {
+        // 未登录
+          const localChannels = storage.getItem('TOUTIAO_CHANNELS')
+          if (localChannels) {
+          // 有存储
+            this.channels = localChannels
+          } else {
+          // 没存储
+            const { data } = await getUserChannels()
+            this.channels = data.channels
+          }
+        }
+      } catch (err) {
+        this.$toast('数据获取失败')
+      }
     },
     updateActive (index, isEditChannelShow = false) { // 子组件的事件
       // 更新当前标签
