@@ -17,3 +17,11 @@ export function addUserChannel (channels) {
     }
   })
 }
+
+// 删除用户频道
+export function deleteUserChannel (channelId) {
+  return request({
+    url: `/v1_0/user/channels/${channelId}`,
+    method: 'DELETE'
+  })
+}

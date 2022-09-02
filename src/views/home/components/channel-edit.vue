@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { getAllChannels, addUserChannel } from '@/api/channel'
+import { getAllChannels, addUserChannel, deleteUserChannel } from '@/api/channel'
 import storage from '@/utils/storage'
 export default {
   props: {
@@ -99,19 +99,21 @@ export default {
       } else {
         // 未登录状态
         // 需要存储在本地存储
-        storage.setItem('TOUTIAO_CHANNELS', this.myChannels)
+        storage.setItem('TOUTIAO_CHANNELS', [...this.myChannels, channel])
       }
     },
-    clickMyChannel (channel, index) { // 点击我的频道 , 注意第二个参数要接受索引值
+    async clickMyChannel (channel, index) { // 点击我的频道 , 注意第二个参数要接受索引值
       if (this.isEdit) {
         // 编辑状态
+
+        let clonedChannel
 
         // 3. 处理一个情况: 不能删除 "推荐"频道, 固定的频道
         if (this.fixeChannels.includes(channel.id)) { // 注意:这里需要检查的是id不是索引值, 因为 fixeChannels 它存的是 id
           this.$toast('不能删除此频道哦')
         } else {
           // 1. myChannels 删除点击的元素 ( 主要的逻辑 )
-          const clonedChannel = [...this.myChannels]
+          clonedChannel = [...this.myChannels]
           clonedChannel.splice(index, 1)
           this.$emit('update:myChannels', clonedChannel)
 
@@ -121,6 +123,19 @@ export default {
             // 让激活的频道 - 1
             this.$emit('update-active', this.activeIndex - 1, true) // 第三个参数 不关掉弹层
           }
+        }
+
+        // 删除频道的 数据持久化
+        if (this.$store.state.user.user) {
+          // 已登录
+          try {
+            await deleteUserChannel(channel.id)
+          } catch (err) {
+            this.$toast('操作失败, 请稍后重试')
+          }
+        } else {
+          // 未登录 , 数据存在本地存储
+          storage.setItem('TOUTIAO_CHANNELS', clonedChannel)
         }
       } else {
         // 不是编辑状态
