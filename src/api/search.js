@@ -8,3 +8,10 @@ export function getSuggestions (q) {
     }
   })
 }
+//  获取搜索结果
+export function gerSearchResult (params) {
+  return request({
+    url: '/v1_0/search',
+    params
+  })
+}

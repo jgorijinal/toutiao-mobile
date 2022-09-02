@@ -53,8 +53,16 @@ export default {
 
 <style lang="less" scoped>
 .search-container {
+  padding-top: 108px;
   .van-search__action{
     color:#fff;
+  }
+  .van-search {
+    position: fixed;
+    left:0;
+    right:0;
+    top:0;
+    z-index:1;
   }
 }
 </style>
