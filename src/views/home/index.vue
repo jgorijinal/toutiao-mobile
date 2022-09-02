@@ -3,7 +3,7 @@
     <!--导航栏(搜索)-->
     <van-nav-bar fixed>
       <template v-slot:title>
-        <van-button icon="search" type="info" round size="small" class="search-btn">搜索</van-button>
+        <van-button to="/search" icon="search" type="info" round size="small" class="search-btn">搜索</van-button>
       </template>
     </van-nav-bar>
     <!--标签页-->
