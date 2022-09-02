@@ -14,9 +14,9 @@
         @focus="isResultShow = false"
     />
     <!--搜索结果-->
-    <search-result v-if="isResultShow"></search-result>
+    <search-result v-if="isResultShow" :value="value"></search-result>
     <!--搜索建议-->
-    <search-suggestion v-else-if="value" :value="value"></search-suggestion>
+    <search-suggestion v-else-if="value" :value="value" @search="onSearch"></search-suggestion>
     <!--搜索历史-->
     <search-history v-else></search-history>
 </form>
@@ -40,8 +40,9 @@ export default {
     }
   },
   methods: {
-    onSearch () { // 搜索
-      console.log('搜索')
+    onSearch (value) { // 搜索
+      this.isResultShow = true // 显示搜索结果
+      this.value = value // 搜索框里显示我点击的那内容
     },
     onCancel () { // 取消
       console.log('取消')

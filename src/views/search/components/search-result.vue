@@ -21,6 +21,12 @@ export default {
       finished: false
     }
   },
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     onLoad () {
       // 异步更新数据
