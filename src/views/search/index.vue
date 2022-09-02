@@ -36,13 +36,22 @@ export default {
   data () {
     return {
       value: '',
-      isResultShow: false // 控制搜索结果显示/隐藏
+      isResultShow: false, // 控制搜索结果显示/隐藏\
+      searchHistory: [] // 历史记录
     }
   },
   methods: {
     onSearch (value) { // 搜索
       this.isResultShow = true // 显示搜索结果
       this.value = value // 搜索框里显示我点击的那内容
+
+      // 添加历史记录
+      // 要求: 不能重复, 把最新的放到最前面
+      const index = this.searchHistory.indexOf(value)
+      if (this.searchHistory.indexOf(value) !== -1) {
+        this.searchHistory.splice(index, 1)
+      }
+      this.searchHistory.unshift(value)
     },
     onCancel () { // 取消
       console.log('取消')
