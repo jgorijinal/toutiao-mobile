@@ -53,7 +53,7 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content markdown-body" v-html="article.content"></div>
+        <div class="article-content markdown-body" v-html="article.content" ref="articleContent"></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -103,6 +103,7 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+import { ImagePreview } from 'vant'
 export default {
   name: 'ArticleIndex',
   components: {},
@@ -128,12 +129,34 @@ export default {
       try {
         const { data } = await getArticleById(this.articleId)
         this.article = data
+
+        // 图片预览
+        setTimeout(() => {
+          this.previewImage()
+        }, 0)
       } catch (err) {
         if (err.response && err.response.status === 404) {
           this.errorCode = 404
         }
       }
       this.loading = false
+    },
+    previewImage () { // 预览图片
+      // 遍历dom, 找到 img标签
+      // 遍历img标签, 得到 img.src数组, 注册事件 ImagePreview, 并预览图片
+      const articleContentRef = this.$refs.articleContent
+      const imgs = articleContentRef.querySelectorAll('img') // img标签的数组
+      const images = [] // 图片地址的数组
+      imgs.forEach((img, index) => {
+        images.push(img.src)
+        img.oncLick = () => {
+          ImagePreview({
+            images,
+            startPosition: index, // 起始位置, 用索引值
+            closeable: true
+          })
+        }
+      })
     }
   }
 }
