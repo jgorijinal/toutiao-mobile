@@ -8,3 +8,10 @@ export function getArticles (params) {
     params
   })
 }
+
+// 获得文章详情
+export function getArticleById (articleId) {
+  return request({
+    url: `/v1_0/articles/${articleId}`
+  })
+}
