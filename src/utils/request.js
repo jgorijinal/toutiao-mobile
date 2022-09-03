@@ -22,7 +22,6 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use(res => {
   return res.data
 }, (err) => {
-  console.log(err)
   return Promise.reject(err)
 })
 

@@ -29,3 +29,21 @@ export function getUserChannels () {
     url: '/v1_0/user/channels'
   })
 }
+
+// 添加关注
+export function addFollow (userId) {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'post',
+    data: {
+      userId
+    }
+  })
+}
+// 删除关注
+export function deleteFollow (userId) {
+  return request({
+    url: `/v1_0/user/followings/${userId}`,
+    method: 'DELETE'
+  })
+}

@@ -36,19 +36,7 @@
           />
           <div slot="title" class="user-name">{{article.aut_name === '黑马程序员(改不了)' ? '善良的程序员作家' : article.aut_name}}</div>
           <div slot="label" class="publish-date">{{article.pubdate | relativeTime}}</div>
-          <van-button
-            class="follow-btn"
-            type="info"
-            color="#3296fa"
-            round
-            size="small"
-            icon="plus"
-          >关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+          <follow-user :is_followed.sync="article.is_followed" :aut_id="article.aut_id"/>
         </van-cell>
         <!-- /用户信息 -->
 
@@ -87,14 +75,8 @@
         badge="123"
         color="#777"
       />
-      <van-icon
-        color="#777"
-        name="star-o"
-      />
-      <van-icon
-        color="#777"
-        name="good-job-o"
-      />
+      <collect-article :is_collected.sync="article.is_collected" :articleId="articleId"/>
+      <like-article  :attitude.sync="article.attitude" :articleId="articleId"/>
       <van-icon name="share" color="#777777"></van-icon>
     </div>
     <!-- /底部区域 -->
@@ -104,9 +86,16 @@
 <script>
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
+import followUser from '@/components/follow-user.vue'
+import collectArticle from '@/components/collect-article.vue'
+import likeArticle from '@/components/like-article.vue'
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    followUser,
+    collectArticle,
+    likeArticle
+  },
   props: {
     articleId: {
       type: [Number, String],
@@ -121,14 +110,14 @@ export default {
     }
   },
   created () {
-    this.getArticleById()
+    this.getArticleById(this.articleId)
   },
   methods: {
-    async getArticleById () {
+    async getArticleById (articleId) {
       this.loading = true
       try {
-        const { data } = await getArticleById(this.articleId)
-        this.article = data
+        const { data } = await getArticleById(articleId)
+        this.article = { ...data }
 
         // 图片预览
         setTimeout(() => {
