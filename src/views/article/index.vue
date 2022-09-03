@@ -5,6 +5,7 @@
       class="page-nav-bar"
       left-arrow
       title="头条"
+      @click-left="$router.back()"
     ></van-nav-bar>
     <!-- /导航栏 -->
 
@@ -52,7 +53,7 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content" v-html="article.content"></div>
+        <div class="article-content markdown-body" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -139,6 +140,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import './github-markdown.css';
 .article-container {
   .main-wrap {
     position: fixed;

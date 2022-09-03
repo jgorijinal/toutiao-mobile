@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="label-info-wrap">
-        <span>{{article.aut_name}}</span>
+        <span>{{article.aut_name === '黑马程序员(改不了)' ? '善良的程序员作家' : article.aut_name}}</span>
         <span>{{article.comm_count+'评论'}}</span>
         <span>{{article.pubdate | relativeTime}}</span>
       </div>
