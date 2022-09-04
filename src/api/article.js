@@ -37,7 +37,7 @@ export function deleteCollect (articleId) {
 // 点赞文章
 export function addLike (articleId) {
   return request({
-    url: ' /v1_0/article/likings',
+    url: '/v1_0/article/likings',
     method: 'post',
     data: {
       target: articleId

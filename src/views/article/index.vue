@@ -43,6 +43,7 @@
         <!-- 文章内容 -->
         <div class="article-content markdown-body" v-html="article.content" ref="articleContent"></div>
         <van-divider>正文结束</van-divider>
+        <comment-list></comment-list>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -89,12 +90,14 @@ import { ImagePreview } from 'vant'
 import followUser from '@/components/follow-user.vue'
 import collectArticle from '@/components/collect-article.vue'
 import likeArticle from '@/components/like-article.vue'
+import commentList from './components/comment-list.vue'
 export default {
   name: 'ArticleIndex',
   components: {
     followUser,
     collectArticle,
-    likeArticle
+    likeArticle,
+    commentList
   },
   props: {
     articleId: {
