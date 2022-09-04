@@ -19,16 +19,16 @@ const routes = [
         name: 'home',
         component: () => import('@/views/home/index.vue')
       },
-      {
-        path: 'qa',
-        name: 'qa',
-        component: () => import('@/views/qa/index.vue')
-      },
-      {
-        path: 'video',
-        name: 'video',
-        component: () => import('@/views/video/index.vue')
-      },
+      // {
+      //   path: 'qa',
+      //   name: 'qa',
+      //   component: () => import('@/views/qa/index.vue')
+      // },
+      // {
+      //   path: 'video',
+      //   name: 'video',
+      //   component: () => import('@/views/video/index.vue')
+      // },
       {
         path: 'my',
         name: 'my',
@@ -46,6 +46,11 @@ const routes = [
     name: 'article',
     component: () => import('@/views/article/index.vue'),
     props: true // 把路由参数映射到组件的 props里面
+  },
+  {
+    path: '/user/profile',
+    name: 'user-profile',
+    component: () => import('@/views/user-profile/index.vue')
   }
 ]
 

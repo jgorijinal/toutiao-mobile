@@ -22,6 +22,12 @@ export function getUserInfo () {
     url: '/v1_0/user'
   })
 }
+// 获取用户个人资料
+export function getUserProfile () {
+  return request({
+    url: '/v1_0/user/profile'
+  })
+}
 
 // 获取用户的频道
 export function getUserChannels () {

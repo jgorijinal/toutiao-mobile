@@ -6,16 +6,19 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <comment-item v-for="(item, index ) in list" :key="index" :comment.sync="list[index]"  @click-reply="clickReply"/>
+      <comment-item v-for="(item, index ) in list" :key="index" :comment.sync="list[index]"
+      @click-reply="clickReply"
+      />
     </van-list>
 
     <!--弹出层 (评论回复)-->
     <van-popup
+      get-container="body"
       v-model="isReplyShow"
       position="bottom"
-      closeable
       style="height: 94%"
     >
+      <comment-reply :comment="currentComment" v-if="isReplyShow"  @click-close="clickClose"></comment-reply>
     </van-popup>
   </div>
 </template>
@@ -23,9 +26,11 @@
 <script>
 import { getComments } from '@/api/comment'
 import commentItem from './comment-item.vue'
+import commentReply from './comment-reply.vue'
 export default {
   components: {
-    commentItem
+    commentItem,
+    commentReply
   },
   data () {
     return {
@@ -34,7 +39,8 @@ export default {
       finished: false,
       offset: null,
       limit: 10,
-      isReplyShow: false // 评论回复弹层显示/隐藏
+      isReplyShow: false, // 评论回复弹层显示/隐藏
+      currentComment: {} // 要回复的评论
     }
   },
   props: {
@@ -80,7 +86,11 @@ export default {
     },
     clickReply (comment) { // 监听子组件事件 , 拿到了 comment 对象
       console.log(comment)
-      this.isReplyShow = true
+      this.currentComment = comment
+      this.isReplyShow = true // 显示弹层
+    },
+    clickClose () {
+      this.isReplyShow = false
     }
   }
 }
