@@ -43,7 +43,14 @@
         <!-- 文章内容 -->
         <div class="article-content markdown-body" v-html="article.content" ref="articleContent"></div>
         <van-divider>正文结束</van-divider>
-        <comment-list></comment-list>
+        <comment-list ref="commentListRef" :source="articleId" @onload-success="commentTotalCount = $event"></comment-list>
+        <!--弹出层 (写评论)-->
+        <van-popup
+          v-model="isPostShow"
+          position="bottom"
+        >
+          <comment-post :source="articleId" @post-success="postSuccess"></comment-post>
+        </van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -64,16 +71,17 @@
     </div>
 
     <!-- 底部区域 -->
-    <div class="article-bottom">
+    <div class="article-bottom" v-if="!isPostShow">
       <van-button
         class="comment-btn"
         type="default"
         round
         size="small"
+        @click="isPostShow = true"
       >写评论</van-button>
       <van-icon
         name="comment-o"
-        badge="123"
+        :badge="commentTotalCount"
         color="#777"
       />
       <collect-article :is_collected.sync="article.is_collected" :articleId="articleId"/>
@@ -91,13 +99,15 @@ import followUser from '@/components/follow-user.vue'
 import collectArticle from '@/components/collect-article.vue'
 import likeArticle from '@/components/like-article.vue'
 import commentList from './components/comment-list.vue'
+import commentPost from './components/comment-post.vue'
 export default {
   name: 'ArticleIndex',
   components: {
     followUser,
     collectArticle,
     likeArticle,
-    commentList
+    commentList,
+    commentPost
   },
   props: {
     articleId: {
@@ -109,7 +119,9 @@ export default {
     return {
       article: {}, // 文章详情
       loading: false, // 加载动画
-      errorCode: 0 // 错误状态码
+      errorCode: 0, // 错误状态码
+      commentTotalCount: 0, // 评论总数
+      isPostShow: false // 弹出层 显示/隐藏
     }
   },
   created () {
@@ -149,6 +161,12 @@ export default {
           })
         }
       })
+    },
+    postSuccess (newObj) {
+      // 关闭弹出层
+      // 把 新obj 添加到 list数组前面
+      this.isPostShow = false
+      this.$refs.commentListRef.list.unshift(newObj)
     }
   }
 }
