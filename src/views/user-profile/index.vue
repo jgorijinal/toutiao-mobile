@@ -51,7 +51,7 @@
       position="bottom"
       get-container="body"
       >
-      <update-photo :img="img" @click-close="isUpdatePhotoShow = false" v-if="isUpdatePhotoShow"></update-photo>
+      <update-photo :img.sync="img" @click-close="isUpdatePhotoShow = false" v-if="isUpdatePhotoShow"></update-photo>
     </van-popup>
   </div>
 </template>
