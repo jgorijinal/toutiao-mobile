@@ -53,3 +53,12 @@ export function deleteFollow (userId) {
     method: 'DELETE'
   })
 }
+
+// 修改用户个人资料
+export function updateProfile (data) {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'patch',
+    data
+  })
+}
